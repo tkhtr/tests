@@ -1,6 +1,10 @@
 package addnew
 
-import "testing"
+import (
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestAddNew(t *testing.T) {
 	type NewPerson struct {
@@ -13,22 +17,22 @@ func TestAddNew(t *testing.T) {
 		existedMembers map[Relationship]Person
 		newMember      NewPerson
 		wantError      bool
-	} {
+	}{
 		{
 			name: "Test #1: adding child",
 			existedMembers: map[Relationship]Person{
 				Child: {
 					FirstName: "Zaza",
-					LastName: "Zerno",
-					Age: 5,
+					LastName:  "Zerno",
+					Age:       5,
 				},
 			},
 			newMember: NewPerson{
 				relationshop: Father,
 				person: Person{
 					FirstName: "Zakabuddin",
-					LastName: "Zernovich",
-					Age: 34,
+					LastName:  "Zernovich",
+					Age:       34,
 				},
 			},
 			wantError: false,
@@ -39,16 +43,16 @@ func TestAddNew(t *testing.T) {
 			existedMembers: map[Relationship]Person{
 				Child: {
 					FirstName: "Zaza",
-					LastName: "Zerno",
-					Age: 5,
+					LastName:  "Zerno",
+					Age:       5,
 				},
 			},
 			newMember: NewPerson{
 				relationshop: Mother,
 				person: Person{
 					FirstName: "Galya",
-					LastName: "Zernovna",
-					Age: 30,
+					LastName:  "Zernovna",
+					Age:       30,
 				},
 			},
 			wantError: true,
@@ -61,9 +65,16 @@ func TestAddNew(t *testing.T) {
 				Members: test.existedMembers,
 			}
 
-			if err := family.AddNew(test.newMember.relationshop, test.newMember.person); (err != nil) != test.wantError {
-				t.Errorf("AddNew() error = %v, wantErr %v", err, test.wantError)
+			err := family.AddNew(test.newMember.relationshop, test.newMember.person)
+
+			if !test.wantError {
+				require.NoError(t, err)
+
+				assert.Contains(t, family.Members, test.newMember.relationshop)
+				return
 			}
+
+			assert.Error(t, err)
 		})
 	}
 }

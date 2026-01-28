@@ -1,6 +1,9 @@
 package fullname
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestFullName(t *testing.T) {
 	tests := []struct {
@@ -12,7 +15,7 @@ func TestFullName(t *testing.T) {
 			name: "test #1",
 			value: User{
 				FirstName: "Tokhtar",
-				LastName: "Aubakirov",
+				LastName:  "Aubakirov",
 			},
 			want: "Tokhtar Aubakirov",
 		},
@@ -20,7 +23,7 @@ func TestFullName(t *testing.T) {
 			name: "test #2",
 			value: User{
 				FirstName: "Aigerim",
-				LastName: "Aubakirova",
+				LastName:  "Aubakirova",
 			},
 			want: "Aigerim Aubakirova",
 		},
@@ -28,7 +31,7 @@ func TestFullName(t *testing.T) {
 			name: "test #2",
 			value: User{
 				FirstName: "Jone",
-				LastName: "Jones",
+				LastName:  "Jones",
 			},
 			want: "Jone Jones",
 		},
@@ -36,9 +39,7 @@ func TestFullName(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			if val := test.value.FullName(); val != test.want {
-				t.Errorf("FullName() = %v, want = %v", test.value, test.want)
-			}
-		}) 
+			assert.Equal(t, test.want, test.value.FullName())
+		})
 	}
 }

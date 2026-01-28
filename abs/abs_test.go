@@ -1,6 +1,9 @@
 package abs
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestAbs(t *testing.T) {
 	tests := []struct {
@@ -9,27 +12,25 @@ func TestAbs(t *testing.T) {
 		want  float64
 	}{
 		{
-			name: "test #1: simple check",
+			name:  "test #1: simple check",
 			value: 3.1,
-			want: 3.1,
+			want:  3.1,
 		},
 		{
-			name: "test #2: negative value check",
+			name:  "test #2: negative value check",
 			value: -3.14,
-			want: 3.14,
+			want:  3.14,
 		},
 		{
-			name: "test #3: negative zero check",
+			name:  "test #3: negative zero check",
 			value: -0,
-			want: 0,
+			want:  0,
 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			if val := Abs(test.value); val != test.want {
-				t.Errorf("Abs() = %v, want %v", val, test.want)
-			}
+			assert.Equal(t, test.want, Abs(test.value))
 		})
 	}
 }
