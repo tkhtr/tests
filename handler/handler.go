@@ -37,3 +37,35 @@ func UserViewHandler(users map[string]User) http.HandlerFunc {
 		rw.Write(jsonUser)
 	}
 }
+
+func UserCreateHandler(users map[string]User) http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(rw, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		var user User
+		err := json.NewDecoder(r.Body).Decode(&user)
+		if err != nil {
+			http.Error(rw, "invalid json body", http.StatusBadRequest)
+			return
+		}
+
+		if user.ID == "" {
+			http.Error(rw, "id is required", http.StatusBadRequest)
+			return
+		}
+
+		if _, ok := users[user.ID]; ok {
+			http.Error(rw, "user already exists", http.StatusConflict)
+			return
+		}
+
+		users[user.ID] = user
+
+		rw.Header().Set("Content-Type", "application/json")
+		rw.WriteHeader(http.StatusCreated)
+		_ = json.NewEncoder(rw).Encode(user)
+	}
+}
